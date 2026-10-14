@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<div class="hero-panel text-center mb-5">
+    <h1 class="fw-bold display-6 mb-2">AI-Generated Assignment Detection System</h1>
+    <p class="text-muted mb-0 fs-6">Allot assignments, collect submissions, and screen them for AI-generated writing — all in one place.</p>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <div class="col-md-5">
+        <div class="card card-hover p-4 h-100 text-center">
+            <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+                 style="width:56px;height:56px;background:linear-gradient(135deg,var(--brand-1),var(--brand-2));">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
+            </div>
+            <h4>Teacher</h4>
+            <p class="text-muted">Add students, allot assignments, review submissions, and run AI checks.</p>
+            <a href="{% url 'accounts:teacher_login' %}" class="btn btn-brand mt-2">Teacher Login</a>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card card-hover p-4 h-100 text-center">
+            <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+                 style="width:56px;height:56px;background:linear-gradient(135deg,var(--accent),var(--brand-1));">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+            </div>
+            <h4>Student</h4>
+            <p class="text-muted">Log in with your register number and date of birth to view and submit assignments.</p>
+            <a href="{% url 'accounts:student_login' %}" class="btn btn-outline-brand mt-2">Student Login</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

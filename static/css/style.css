@@ -1,0 +1,180 @@
+:root {
+    --brand-1: #4F46E5;
+    --brand-2: #7C3AED;
+    --accent: #22D3B8;
+    --danger: #E5533C;
+    --success: #2F9E6E;
+    --ink: #1E1B2E;
+    --muted: #6B7280;
+    --card-bg: #ffffff;
+    --page-bg: #F5F5FC;
+}
+
+body {
+    background-color: var(--page-bg);
+    background-image:
+        radial-gradient(circle at 15% 10%, rgba(124,58,237,0.07) 0, transparent 40%),
+        radial-gradient(circle at 85% 0%, rgba(34,211,184,0.08) 0, transparent 35%),
+        radial-gradient(circle, rgba(79,70,229,0.06) 1px, transparent 1px);
+    background-size: auto, auto, 22px 22px;
+    background-attachment: fixed;
+    color: var(--ink);
+}
+
+/* ---------- Navbar ---------- */
+.app-navbar {
+    background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+    box-shadow: 0 2px 14px rgba(79,70,229,0.25);
+}
+.app-navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.2px;
+}
+.app-navbar .brand-sub {
+    font-size: 0.7rem;
+    opacity: 0.75;
+    display: block;
+    margin-top: -3px;
+    font-weight: 400;
+}
+.nav-icon-btn {
+    color: #fff;
+    background: rgba(255,255,255,0.14);
+    border: none;
+    border-radius: 10px;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.15s ease;
+    text-decoration: none;
+}
+.nav-icon-btn:hover {
+    background: rgba(255,255,255,0.26);
+    color: #fff;
+}
+.dropdown-toggle-nocaret::after { display: none; }
+.notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--danger);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    border: 2px solid var(--brand-1);
+}
+.role-chip {
+    background: rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    border: none;
+    box-shadow: 0 2px 16px rgba(30, 27, 46, 0.06);
+    border-radius: 16px;
+    background: var(--card-bg);
+}
+.card:hover.card-hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(30, 27, 46, 0.1);
+}
+.card-hover { transition: all 0.15s ease; }
+
+/* ---------- Hero (home page) ---------- */
+.hero-panel {
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    background: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(34,211,184,0.08));
+    position: relative;
+    overflow: hidden;
+}
+.hero-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(124,58,237,0.10) 1.5px, transparent 1.5px);
+    background-size: 26px 26px;
+    opacity: 0.7;
+}
+.hero-panel > * { position: relative; z-index: 1; }
+
+/* ---------- Buttons ---------- */
+.btn-brand {
+    background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+    color: #fff;
+    border: none;
+    font-weight: 500;
+}
+.btn-brand:hover { color: #fff; opacity: 0.92; }
+.btn-outline-brand {
+    border: 1.5px solid var(--brand-1);
+    color: var(--brand-1);
+    background: transparent;
+    font-weight: 500;
+}
+.btn-outline-brand:hover {
+    background: var(--brand-1);
+    color: #fff;
+}
+
+/* ---------- Badges / status ---------- */
+.badge-ai { background: var(--danger); }
+.badge-human { background: var(--success); }
+
+/* ---------- Tables ---------- */
+.table-clean thead {
+    background: #F3F1FD;
+}
+.table-clean th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: none;
+}
+.table-clean td {
+    vertical-align: middle;
+}
+.avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-1), var(--accent));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* ---------- Dropdown notification list ---------- */
+.notif-dropdown {
+    min-width: 300px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+.notif-item {
+    display: block;
+    padding: 10px 14px;
+    border-bottom: 1px solid #F0EEFB;
+    font-size: 0.88rem;
+    color: var(--ink);
+}
+.notif-item:hover { background: #F8F7FE; }

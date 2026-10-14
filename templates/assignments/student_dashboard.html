@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h3 class="fw-bold mb-4">Welcome, {{ user.first_name }}</h3>
+
+{% if recent_reallotments %}
+<div class="alert alert-warning">
+    <strong>Action needed:</strong> the following assignment(s) were flagged as likely AI-generated
+    and have been sent back to you for resubmission:
+    <ul class="mb-0 mt-1">
+        {% for r in recent_reallotments %}
+            <li><a href="{% url 'assignments:assignment_detail_student' r.assignment_id %}">{{ r.assignment.title }}</a> — previously flagged {{ r.previous_ai_probability }}% AI</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="card p-3">
+    <h5 class="mb-3">Your Assignments</h5>
+    {% if assignments %}
+        <div class="list-group">
+        {% for a in assignments %}
+            <a href="{% url 'assignments:assignment_detail_student' a.pk %}" class="list-group-item list-group-item-action">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">{{ a.title }}</span>
+                    {% if a.id in submitted_ids %}
+                        <span class="badge bg-success">Submitted</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </div>
+                <div class="text-muted small">{% if a.due_date %}Due {{ a.due_date|date:"d M Y, H:i" }}{% endif %}</div>
+            </a>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted mb-0">No assignments have been allotted to you yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Assignment Detector{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accounts:home' %}">
+                {% include "partials/logo.html" %}
+                <span>
+                    AI Assignment Detector
+                    <span class="brand-sub">AI vs. Human writing screener</span>
+                </span>
+            </a>
+
+            <div class="d-flex align-items-center gap-2">
+                {% if user.is_authenticated %}
+                    {% if user.role == 'TEACHER' %}
+                        <a href="{% url 'assignments:teacher_dashboard' %}" class="nav-icon-btn" title="Home">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'assignments:student_dashboard' %}" class="nav-icon-btn" title="Home">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+                        </a>
+                    {% endif %}
+
+                    {% if user.role == 'STUDENT' %}
+                    <div class="dropdown">
+                        <button class="nav-icon-btn dropdown-toggle-nocaret" data-bs-toggle="dropdown" title="New assignments">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/><path d="M18.4 2.6a2 2 0 1 1 2.8 2.8L12 14.6l-4 1 1-4 9.4-9.4z"/></svg>
+                            {% if unseen_assignments > 0 %}<span class="notif-badge">{{ unseen_assignments }}</span>{% endif %}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end notif-dropdown p-0">
+                            <h6 class="dropdown-header">New Assignments</h6>
+                            {% for a in unseen_assignment_list %}
+                                <a class="notif-item" href="{% url 'assignments:assignment_detail_student' a.pk %}">{{ a.title }}</a>
+                            {% empty %}
+                                <span class="notif-item text-muted">Nothing new</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="dropdown">
+                        <button class="nav-icon-btn dropdown-toggle-nocaret" data-bs-toggle="dropdown" title="{% if user.role == 'TEACHER' %}Unreviewed submissions{% else %}Reports{% endif %}">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+                            {% if unseen_reports > 0 %}<span class="notif-badge">{{ unseen_reports }}</span>{% endif %}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end notif-dropdown p-0">
+                            <h6 class="dropdown-header">{% if user.role == 'TEACHER' %}New Submissions{% else %}Reports on Your Work{% endif %}</h6>
+                            {% if user.role == 'TEACHER' %}
+                                {% for s in unseen_report_list %}
+                                    <a class="notif-item" href="{% url 'assignments:assignment_detail_teacher' s.assignment_id %}">{{ s.student.name }} &middot; {{ s.assignment.title }}</a>
+                                {% empty %}
+                                    <span class="notif-item text-muted">Nothing new</span>
+                                {% endfor %}
+                            {% else %}
+                                {% for r in unseen_report_list %}
+                                    <a class="notif-item" href="{% url 'assignments:assignment_detail_student' r.assignment_id %}">
+                                        "{{ r.assignment.title }}" sent back &middot; {{ r.previous_ai_probability }}% AI
+                                    </a>
+                                {% empty %}
+                                    <span class="notif-item text-muted">Nothing new</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <span class="role-chip d-none d-sm-inline">{{ user.first_name|default:user.username }}</span>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light btn-sm">Log out</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

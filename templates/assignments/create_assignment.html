@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Create Assignment{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h4 class="mb-3">Create Assignment</h4>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">{{ form.title.label }}</label>
+                    {{ form.title }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ form.description.label }}</label>
+                    {{ form.description }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ form.due_date.label }}</label>
+                    {{ form.due_date }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ form.attachment.label }} (optional)</label>
+                    {{ form.attachment }}
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label mb-1">Allot to Students</label>
+                        <div>
+                            <button type="button" id="selectAllBtn" class="btn btn-link btn-sm p-0 me-2">Select all</button>
+                            <button type="button" id="clearAllBtn" class="btn btn-link btn-sm p-0 text-muted">Clear all</button>
+                        </div>
+                    </div>
+                    <div class="form-text mb-2">{{ form.students.help_text }}</div>
+                    <div class="border rounded p-2" id="studentCheckboxes" style="max-height: 240px; overflow-y: auto;">
+                        {{ form.students }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-brand w-100">Create &amp; Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('selectAllBtn').addEventListener('click', function () {
+        document.querySelectorAll('#studentCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = true);
+    });
+    document.getElementById('clearAllBtn').addEventListener('click', function () {
+        document.querySelectorAll('#studentCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+    });
+</script>
+{% endblock %}

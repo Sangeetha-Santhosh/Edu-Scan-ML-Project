@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ assignment.title }}{% endblock %}
+{% block content %}
+<h3 class="fw-bold">{{ assignment.title }}</h3>
+<p class="text-muted">{{ assignment.description }}</p>
+{% if assignment.due_date %}<p><strong>Due:</strong> {{ assignment.due_date|date:"d M Y, H:i" }}</p>{% endif %}
+{% if assignment.attachment %}
+    <p><a href="{{ assignment.attachment.url }}" class="btn btn-sm btn-outline-secondary" target="_blank">Download Assignment Brief</a></p>
+{% endif %}
+
+{% if was_reallotted and not existing %}
+<div class="alert alert-warning">
+    Your previous submission for this assignment was flagged as likely AI-generated and has been
+    cleared. Please resubmit your original work below.
+</div>
+{% endif %}
+
+<div class="card p-4 mt-3">
+    {% if existing %}
+        <h5 class="mb-2">Submitted</h5>
+        <p class="text-muted">You submitted this assignment on {{ existing.submitted_at|date:"d M Y, H:i" }}.</p>
+        <a href="{{ existing.file.url }}" class="btn btn-outline-brand btn-sm" target="_blank">View your file</a>
+    {% else %}
+        <h5 class="mb-3">Submit Your Assignment</h5>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.file }}
+                <div class="form-text">{{ form.file.help_text }}</div>
+                {% for error in form.file.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <button type="submit" class="btn btn-brand">Submit</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

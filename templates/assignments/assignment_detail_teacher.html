@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ assignment.title }}{% endblock %}
+{% block content %}
+<h3 class="fw-bold">{{ assignment.title }}</h3>
+<p class="text-muted">{{ assignment.description }}</p>
+
+<div class="card p-3 mb-4">
+    <h5 class="mb-3">Submissions ({{ submissions.count }} / {{ assignment.students.count }})</h5>
+    {% if submissions %}
+    <div class="table-responsive">
+        <table class="table table-clean align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Reg. No.</th>
+                    <th>Submitted At</th>
+                    <th>Status</th>
+                    <th>AI Check</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in submissions %}
+                <tr>
+                    <td class="fw-semibold">{{ s.student.name }}</td>
+                    <td>{{ s.student.reg_number }}</td>
+                    <td class="text-muted small">{{ s.submitted_at|date:"d M Y, H:i" }}</td>
+                    <td><span class="badge bg-secondary">{{ s.get_status_display }}</span></td>
+                    <td>
+                        {% if s.analysis %}
+                            <span class="badge {% if s.analysis.predicted_label == 'AI-generated' %}badge-ai{% else %}badge-human{% endif %}">
+                                {{ s.analysis.predicted_label }} ({{ s.analysis.ai_probability }}% AI)
+                            </span>
+                        {% else %}
+                            <span class="text-muted small">Not checked yet</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'assignments:download_submission' s.id %}" class="btn btn-sm btn-outline-secondary">Download</a>
+                        <a href="{% url 'detector:check_submission' s.id %}" class="btn btn-sm btn-brand">
+                            {% if s.analysis %}Re-check{% else %}Check for AI{% endif %}
+                        </a>
+                        {% if s.analysis and s.analysis.ai_probability > 50 %}
+                            <form method="post" action="{% url 'assignments:reallot_submission' s.id %}" class="d-inline"
+                                  onsubmit="return confirm('Send this assignment back to {{ s.student.name }} for resubmission?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Reallot</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-muted mb-0">No submissions yet.</p>
+    {% endif %}
+</div>
+
+{% if pending_students %}
+<div class="card p-3">
+    <h5 class="mb-3">Pending ({{ pending_students.count }})</h5>
+    <ul class="mb-0">
+        {% for st in pending_students %}
+            <li>{{ st.name }} ({{ st.reg_number }})</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}
